@@ -34,38 +34,45 @@ class DatasetAPI:
     >>> user, password = ('admin', 'admin')
     >>> api = DatasetAPI(uri, user, password)
   """
-  def __init__(self, dkan, token, debug=False):
+  def __init__(self, dkan, user, password=None, debug=False):
+    '''
+    If the password is None (no password provided), we assume the 'user'
+    argument is the token
+    '''
     self.dkan = dkan
     self.headers = {
       'Accept': 'application/json',
     }
-    self.token = {
-        'services_token': token
-        }
     self.cookies = {}
+    self.token = {}
     self.debug = debug
-    # self.login(token)
+
+
+    if password is None: # Assume Token
+        self.token = {
+            'services_token': user
+            }
+    else:
+        self.login(user, password)
 
   def build_uri(self, path):
     return os.path.join(self.dkan, path).replace('\\', '/')
 
-  def login(self, token):
+  def login(self, user, password):
     """Authenticates against the dkan site.
-
     This method should not be called from user code. It authenticates
     against the DKAN site in two steps. 1) it posts the user and password
     to api/dataset/user/login and retrieves a cookie 2) it sets the acquired
     cookie and posts against services/sessions/token to retrieve a token
     that's going to be sent as a header for every request this client
     builds.
-
-
     :param user: Drupal user
     :param password: Drupal Password
     """
     uri = self.build_uri('api/dataset/user/login')
     data = {
-        'services_token': token
+      'username': user,
+      'password': password
     }
     # Login and set cookie
     login = self.post(uri, data=data)
@@ -82,7 +89,7 @@ class DatasetAPI:
       message = 'pydkan client can\'t login.(%s %s)' % (login.status_code, login.content)
       raise LoginError(message)
 
-  def node(self, action='index', params=self.token, **kwargs):
+  def node(self, action='index', params=None, **kwargs):
     """Interface to the node endpoint.
 
     This method builds requests against the api/dataset/node endpoint. It is
@@ -120,6 +127,12 @@ class DatasetAPI:
       'create': self.post,
       'delete': self.delete
     }
+
+    if params is None:
+        params = self.token
+    else:
+        params.update(self.token)
+
     if not action in action_map.keys():
       raise ValueError('action parameter should be one of the following: %s' % ', '.join(action_map.keys()))
     if action not in ['index', 'retrieve']:
@@ -127,7 +140,7 @@ class DatasetAPI:
       kwargs['headers']['Content-Type'] = 'application/json'
       if 'data' in kwargs.keys():
         kwargs['data'] = json.dumps(kwargs['data'])
-    return action_map[action](uri, **kwargs)
+    return action_map[action](uri, params=params, **kwargs)
 
   def get(self, uri, **kwargs):
     return self.request(uri, 'GET', **kwargs)
