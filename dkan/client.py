@@ -34,19 +34,22 @@ class DatasetAPI:
     >>> user, password = ('admin', 'admin')
     >>> api = DatasetAPI(uri, user, password)
   """
-  def __init__(self, dkan, user, password, debug=False):
+  def __init__(self, dkan, token, debug=False):
     self.dkan = dkan
     self.headers = {
       'Accept': 'application/json',
     }
+    self.token = {
+        'services_token': token
+        }
     self.cookies = {}
     self.debug = debug
-    self.login(user, password)
+    # self.login(token)
 
   def build_uri(self, path):
     return os.path.join(self.dkan, path).replace('\\', '/')
 
-  def login(self, user, password):
+  def login(self, token):
     """Authenticates against the dkan site.
 
     This method should not be called from user code. It authenticates
@@ -62,8 +65,7 @@ class DatasetAPI:
     """
     uri = self.build_uri('api/dataset/user/login')
     data = {
-      'username': user,
-      'password': password
+        'services_token': token
     }
     # Login and set cookie
     login = self.post(uri, data=data)
@@ -172,7 +174,7 @@ class DatasetAPI:
     files = {
       'files[1]': open(file, 'rb'),
     }
-    return self.post(uri, headers=headers, data=data, files=files)
+    return self.post(uri, headers=headers, data=data, files=files, params=self.token)
 
   @classmethod
   def pretty_print_request(cls, req):
@@ -187,3 +189,15 @@ class DatasetAPI:
         req.body,
         '------------END------------'
     ))
+
+"""
+http://massdocsdev.prod.acquia-sites.com
+
+curl -v -H "Content-Type: application/json" -X PUT -d "{\"title\":\"Title Updated by SS\"}" "http://docs.digital.mass.gov//api/action/datastore/node/1046?services_token=e403b17c91d45dd686506aa006b1b0b243854341" -H 'cache-control: no-cache'
+
+# Not working
+curl -v -H "Content-Type: application/json" -X PUT -d "{\"title\":\"Title SLESLESLE\"}" "http://massdocsdev.prod.acquia-sites.com//api/action/datastore/node/1046?services_token=e403b17c91d45dd686506aa006b1b0b243854341" -H 'cache-control: no-cache'
+
+curl -v -H "Content-Type: application/json" -X PUT -d "{\"title\":\"Title SLESLESLE\"}" "http://massgov:for the commonwealth@massdocsdev.prod.acquia-sites.com//api/action/datastore/node/1046?services_token=e403b17c91d45dd686506aa006b1b0b243854341" -H 'cache-control: no-cache'
+
+"""
