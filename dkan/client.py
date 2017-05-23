@@ -82,7 +82,7 @@ class DatasetAPI:
       message = 'pydkan client can\'t login.(%s %s)' % (login.status_code, login.content)
       raise LoginError(message)
 
-  def node(self, action='index', **kwargs):
+  def node(self, action='index', params=self.token, **kwargs):
     """Interface to the node endpoint.
 
     This method builds requests against the api/dataset/node endpoint. It is
