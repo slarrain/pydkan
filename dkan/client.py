@@ -189,15 +189,3 @@ class DatasetAPI:
         req.body,
         '------------END------------'
     ))
-
-"""
-http://massdocsdev.prod.acquia-sites.com
-
-curl -v -H "Content-Type: application/json" -X PUT -d "{\"title\":\"Title Updated by SS\"}" "http://docs.digital.mass.gov//api/action/datastore/node/1046?services_token=e403b17c91d45dd686506aa006b1b0b243854341" -H 'cache-control: no-cache'
-
-# Not working
-curl -v -H "Content-Type: application/json" -X PUT -d "{\"title\":\"Title SLESLESLE\"}" "http://massdocsdev.prod.acquia-sites.com//api/action/datastore/node/1046?services_token=e403b17c91d45dd686506aa006b1b0b243854341" -H 'cache-control: no-cache'
-
-curl -v -H "Content-Type: application/json" -X PUT -d "{\"title\":\"Title SLESLESLE\"}" "http://massgov:for the commonwealth@massdocsdev.prod.acquia-sites.com//api/action/datastore/node/1046?services_token=e403b17c91d45dd686506aa006b1b0b243854341" -H 'cache-control: no-cache'
-
-"""
