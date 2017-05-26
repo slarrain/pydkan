@@ -27,3 +27,19 @@ $ pip install git+git://github.com/NuCivic/pydkan.git@0.3#egg=pydkan
 [true]
 ```
 Check the examples folder, there are snippets for pretty much everything you can do with this library.
+
+## New Feature: TOKEN
+
+Now it is possible to use a token instead of a user+password combination.
+In order to do that, you need to miss the password argument, and the user
+argument will be understood as a token.
+
+_Everything else works the same_
+
+```python
+>>> from dkan.client import DatasetAPI
+>>> token = '123456789'
+>>> uri = "http://docker:32770"
+>>> api = DatasetAPI(uri, token)
+...
+```

@@ -8,7 +8,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='pydkan',
-    version='0.1',
+    version='0.1.1',
     author=u'NuCivic',
     author_email='devops@nucivic.com',
     license='BSD licence, see LICENCE.txt',
