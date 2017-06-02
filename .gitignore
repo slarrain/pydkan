@@ -2,3 +2,5 @@
 *.pyc
 *.csv
 *.sqlite
+
+env.sh
