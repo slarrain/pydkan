@@ -5,9 +5,11 @@ from client import DatasetAPI
 uri = os.environ.get('DKAN_URI', False)
 user = os.environ.get('DKAN_USER', 'admin')
 password = os.environ.get('DKAN_PASSWORD', 'admin')
+token = os.environ.get('TOKEN')
 
 if uri:
-    api = DatasetAPI(uri, user, password, True)
+    # api = DatasetAPI(uri, user, password, True)
+    api = DatasetAPI(uri, token)
     # Create dataset
     print 'CREATE DATASET'
     data = {
@@ -26,7 +28,7 @@ if uri:
             'und': {
                 'target_id': dataset_nid,
             },
-            
+
         },
     }
     r = api.node('create', data=data)
