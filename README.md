@@ -31,7 +31,7 @@ Check the examples folder, there are snippets for pretty much everything you can
 ## New Feature: TOKEN
 
 Now it is possible to use a token instead of a user+password combination.
-In order to do that, you need to miss the password argument, and the user
+In order to do that, you need to omit the password argument, and the user
 argument will be understood as a token.
 
 _Everything else works the same_

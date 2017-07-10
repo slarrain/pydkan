@@ -12,7 +12,7 @@ print uri, token
 if uri:
   api = DatasetAPI(uri, token)
   data = {
-      'title': 'Test Dataset SLE 1',
+      'title': 'Test Dataset',
       'type': 'dataset'
   }
   dataset = api.node('create', data=data)
